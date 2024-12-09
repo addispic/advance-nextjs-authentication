@@ -5,6 +5,16 @@ import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
 // icons
 import { IoMdArrowDropdown } from "react-icons/io";
+// lib
+import { SignupFormSchema } from "@/app/lib/definitions";
+
+// interfaces
+// field errors
+interface FormFieldErrorsInterface {
+  username?: string[];
+  email?: string[];
+  password?: string[];
+}
 export default function SignupForm() {
   // states
   // username
@@ -17,6 +27,22 @@ export default function SignupForm() {
   const [isPasswordHide, setIsPasswordHide] = useState(true);
   // focus
   const [focus, setFocus] = useState("");
+  //   errors
+  const [errors, setErrors] = useState<FormFieldErrorsInterface>({});
+
+  //   form submit handler
+  const formSubmitHandler = async () => {
+    const validatedFields = SignupFormSchema.safeParse({
+      username,
+      email,
+      password,
+    });
+    if (!validatedFields.success) {
+      setErrors(validatedFields.error.flatten().fieldErrors);
+    }else {
+        setErrors({})
+    }
+  };
   return (
     <div className="min-w-96 bg-white p-7 rounded-md  shadow-lg">
       {/* header */}
@@ -51,9 +77,11 @@ export default function SignupForm() {
               onBlur={() => setFocus("")}
             />
           </div>
-          {!true && (
+          {errors?.username?.length && (
             <div className="text-sm text-red-500">
-              <p>Username required</p>
+              {errors.username?.map((item) => {
+                return <p key={item}>{item}</p>;
+              })}
             </div>
           )}
         </div>
@@ -76,9 +104,11 @@ export default function SignupForm() {
               onBlur={() => setFocus("")}
             />
           </div>
-          {!true && (
+          {errors.email?.length && (
             <div className="text-sm text-red-500">
-              <p>Email required</p>
+              {errors.email?.map((item) => {
+                return <p key={item}>{item}</p>;
+              })}
             </div>
           )}
         </div>
@@ -109,19 +139,32 @@ export default function SignupForm() {
               {isPasswordHide ? <VscEyeClosed /> : <VscEye />}
             </button>
           </div>
-          {!true && (
+          {errors.password?.length && (
             <div className="text-sm text-red-500">
-              <p>Password required</p>
+              {errors?.password?.map((item) => {
+                return <p key={item}>{item}</p>;
+              })}
             </div>
           )}
         </div>
         {/* button */}
-        <button className="w-full py-1.5 flex items-center justify-center text-white bg-green-500 transition-colors ease-in-out duration-150 hover:bg-green-600 rounded-md mt-7">
-            <span>Signup</span>
+        <button
+          onClick={() => {
+            formSubmitHandler();
+          }}
+          className="w-full py-1.5 flex items-center justify-center text-white bg-green-500 transition-colors ease-in-out duration-150 hover:bg-green-600 rounded-md mt-7"
+        >
+          <span>Signup</span>
         </button>
         {/* link */}
         <p className="mt-7 text-sm text-neutral-500">
-            Already have an account ? <Link className="font-medium transition-colors ease-in-out duration-150 hover:text-green-500" href={'/login'}>Login</Link>
+          Already have an account ?{" "}
+          <Link
+            className="font-medium transition-colors ease-in-out duration-150 hover:text-green-500"
+            href={"/login"}
+          >
+            Login
+          </Link>
         </p>
       </div>
     </div>
