@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
@@ -44,7 +45,24 @@ export default function SignupForm() {
     }else {
         setErrors({})
         const response = await signup({username,email,password}) 
-        console.log(response, "+++++----+++++")
+        if(response?.usernameError){
+            setErrors(prev =>{
+                return {
+                    ...prev,
+                    username: [response.usernameError]
+                }
+            })
+        }
+        else if(response?.emailError){
+            setErrors(prev => {
+                return {
+                    ...prev,
+                    email: [response.emailError]
+                }
+            })
+        }else if(response.successMessage){
+            redirect("/")
+        }
     }
   };
   return (

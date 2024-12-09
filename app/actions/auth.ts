@@ -1,10 +1,13 @@
 "use server";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 // db
 import { dbConnectionHandler } from "../db/db-connection";
 // models
 // user model
 import UserModel from "../models/user-model";
+// lib
+import { encrypt } from "../lib/session";
 // signup
 export async function signup(userCredentials: {
   username: string;
@@ -26,6 +29,13 @@ export async function signup(userCredentials: {
       username,
       email,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+    });
+    (await cookies()).set("session", await encrypt({ _id: newUser?._id }), {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(Date.now() + 60 * 1000),
     });
     return { successMessage: "successful signup" };
   } catch (err) {
