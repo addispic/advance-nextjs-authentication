@@ -7,6 +7,8 @@ import { VscEyeClosed } from "react-icons/vsc";
 import { IoMdArrowDropdown } from "react-icons/io";
 // lib
 import { SignupFormSchema } from "@/app/lib/definitions";
+// actions
+import { signup } from "@/app/actions/auth";
 
 // interfaces
 // field errors
@@ -41,6 +43,8 @@ export default function SignupForm() {
       setErrors(validatedFields.error.flatten().fieldErrors);
     }else {
         setErrors({})
+        const response = await signup({username,email,password}) 
+        console.log(response, "+++++----+++++")
     }
   };
   return (
