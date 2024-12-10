@@ -1,5 +1,6 @@
 import {SignJWT, jwtVerify, JWTPayload} from 'jose'
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 // secrete key
 const secretKey = process.env.SECRET_KEY || "";
@@ -45,4 +46,11 @@ export async function updateSession(request: NextRequest){
 
     return response
 
+}
+
+// get payload
+export async function getPayload(){
+    const session = (await cookies()).get("session")?.value 
+    if(!session) return 
+    return await decrypt(session)
 }

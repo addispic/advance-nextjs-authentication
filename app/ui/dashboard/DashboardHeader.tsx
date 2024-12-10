@@ -5,6 +5,10 @@ import { IoIosNotifications } from "react-icons/io";
 import { RiUser6Line } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
 
+// ui
+// user
+import GetUsername from "../user/GetUsername";
+
 export default function DashboardHeader(){
     return (
         <div className="flex items-center justify-between px-5 py-3">
@@ -28,7 +32,9 @@ export default function DashboardHeader(){
                 </div>
                 {/* user profile */}
                 <div className="flex items-center justify-end gap-x-1 cursor-pointer text-sm text-green-500">
-                    <span>Haddis</span>
+                    <span>
+                        <GetUsername />
+                    </span>
                     <RiUser6Line className="text-xl"/>
                 </div>
                 {/* logout */}
