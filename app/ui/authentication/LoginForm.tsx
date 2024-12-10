@@ -154,7 +154,7 @@ export default function LoginForm() {
             className="font-medium transition-colors ease-in-out duration-150 hover:text-green-500"
             href={"/signup"}
           >
-            Login
+            Signup
           </Link>
         </p>
       </div>
