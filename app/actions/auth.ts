@@ -35,7 +35,7 @@ export async function signup(userCredentials: {
       secure: true,
       sameSite: "lax",
       path: "/",
-      expires: new Date(Date.now() + 60 * 1000),
+      expires: new Date(Date.now() + 60 * 60 * 1000),
     });
     return { successMessage: "successful signup" };
   } catch (err) {
@@ -66,7 +66,7 @@ export async function login(userCredentials: {
         secure: true,
         sameSite: "lax",
         path: "/",
-        expires: new Date(Date.now() + 60 * 1000),
+        expires: new Date(Date.now() + 60 * 60 * 1000),
       }
     );
     return { successMessage: "successful login" };
