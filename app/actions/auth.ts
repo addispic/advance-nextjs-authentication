@@ -42,3 +42,36 @@ export async function signup(userCredentials: {
     return { error: "fail to signup" };
   }
 }
+
+// login
+export async function login(userCredentials: {
+  username: string;
+  password: string;
+}) {
+  const { username, password } = userCredentials;
+  try {
+    await dbConnectionHandler();
+    const isUsernameExist = await UserModel.findOne({ username });
+    if (!isUsernameExist) {
+      return { usernameError: "Username not exist" };
+    }
+    if (!bcrypt.compareSync(password, isUsernameExist.password)) {
+      return { passwordError: "Wrong password" };
+    }
+    (await cookies()).set(
+      "session",
+      await encrypt({ _id: isUsernameExist._id }),
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        path: "/",
+        expires: new Date(Date.now() + 60 * 1000),
+      }
+    );
+    return { successMessage: "successful login" };
+  } catch (err) {
+    console.log(err);
+    return { error: "login failed" };
+  }
+}

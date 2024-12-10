@@ -1,10 +1,24 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+// icons
 import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
-// icons
 import { IoMdArrowDropdown } from "react-icons/io";
+// lib
+import { LoginFormSchema } from "@/app/lib/definitions";
+// actions
+import { login } from "@/app/actions/auth";
+
+
+// interface
+// login form error interface
+interface LoginFormFieldErrorsInterface {
+  username?: string[];
+  password?: string[];
+}
+
 export default function LoginForm() {
   // states
   // username
@@ -15,6 +29,37 @@ export default function LoginForm() {
   const [isPasswordHide, setIsPasswordHide] = useState(true);
   // focus
   const [focus, setFocus] = useState("");
+  // errors
+  const [errors, setErrors] = useState<LoginFormFieldErrorsInterface>({});
+
+  // form submit handler
+  const formSubmitHandler = async () => {
+    const validatedFields = LoginFormSchema.safeParse({ username, password });
+    if (!validatedFields.success) {
+      setErrors(validatedFields.error.flatten().fieldErrors);
+    }else {
+      setErrors({})
+      const response = await login({username,password}) 
+      console.log(response)
+      if(response.usernameError){
+        setErrors(prev=>{
+          return {
+            ...prev,
+            username: [response.usernameError]
+          }
+        })
+      }else if(response.passwordError){
+        setErrors(prev =>{
+          return {
+            ...prev,
+            password: [response.passwordError]
+          }
+        })
+      }else{
+        redirect("/")
+      }
+    }
+  };
   return (
     <div className="min-w-96 bg-white p-7 rounded-md  shadow-lg">
       {/* header */}
@@ -49,13 +94,15 @@ export default function LoginForm() {
               onBlur={() => setFocus("")}
             />
           </div>
-          {!true && (
+          {errors.username?.length && (
             <div className="text-sm text-red-500">
-              <p>Username required</p>
+              {errors.username.map((item) => {
+                return <p key={item}>{item}</p>;
+              })}
             </div>
           )}
         </div>
-        
+
         {/* password */}
         <div className="mb-5">
           <div
@@ -83,14 +130,21 @@ export default function LoginForm() {
               {isPasswordHide ? <VscEyeClosed /> : <VscEye />}
             </button>
           </div>
-          {!true && (
+          {errors?.password?.length && (
             <div className="text-sm text-red-500">
-              <p>Password required</p>
+              {errors?.password?.map((item) => {
+                return <p key={item}>{item}</p>;
+              })}
             </div>
           )}
         </div>
         {/* button */}
-        <button className="w-full py-1.5 flex items-center justify-center text-white bg-green-500 transition-colors ease-in-out duration-150 hover:bg-green-600 rounded-md mt-7">
+        <button
+          onClick={() => {
+            formSubmitHandler();
+          }}
+          className="w-full py-1.5 flex items-center justify-center text-white bg-green-500 transition-colors ease-in-out duration-150 hover:bg-green-600 rounded-md mt-7"
+        >
           <span>Login</span>
         </button>
         {/* link */}
