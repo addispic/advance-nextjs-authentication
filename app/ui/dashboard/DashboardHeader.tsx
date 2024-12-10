@@ -32,7 +32,7 @@ export default function DashboardHeader(){
                     <RiUser6Line className="text-xl"/>
                 </div>
                 {/* logout */}
-                <button className="text-xl text-green-500">
+                <button className="text-xl text-green-500 transition-colors ease-in-out duration-150 hover:text-green-600">
                     <IoExitOutline />
                 </button>
             </div>
