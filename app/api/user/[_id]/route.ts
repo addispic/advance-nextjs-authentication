@@ -9,11 +9,14 @@ import UserModel from "@/app/models/user-model";
 export async function GET(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const _id = pathname.split("/").pop();
-    console.log(_id, "++++++++")
   try {
     await dbConnectionHandler()
-    return NextResponse.json({ message: "get username" });
+    const isUserExist = await UserModel.findById(_id)
+    if(!isUserExist){
+      return NextResponse.json({error: 'user note exits'},{status: 400})
+    }
+    return NextResponse.json({username: isUserExist.username,email: isUserExist.email},{status: 200})
   } catch (err) {
-    return NextResponse.json({error: 'get user error'})
+    return NextResponse.json({error: 'get user error'},{status: 400})
   }
 }

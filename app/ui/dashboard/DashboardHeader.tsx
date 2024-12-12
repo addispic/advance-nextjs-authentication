@@ -11,7 +11,7 @@ import GetUsername from "../user/GetUsername";
 
 export default function DashboardHeader(){
     return (
-        <div className="flex items-center justify-between px-5 py-3">
+        <div className="flex items-center justify-between px-5 py-2">
             {/* left */}
             <div className="flex items-center gap-x-5">
                 {/* toggler */}
@@ -33,7 +33,7 @@ export default function DashboardHeader(){
                 {/* user profile */}
                 <div className="flex items-center justify-end gap-x-1 cursor-pointer text-sm text-green-500">
                     <span>
-                        <GetUsername />
+                        <GetUsername _id={null}/>
                     </span>
                     <RiUser6Line className="text-xl"/>
                 </div>
