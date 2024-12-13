@@ -18,7 +18,11 @@ export default function ProfilePicker() {
                 body: formData,
               }
             ).then((r) => r.json());
-            console.log(data);
+            if(data?.url){
+                console.log(data.url)
+            }
+
+            event.target.value = ""
         }
         
     }
