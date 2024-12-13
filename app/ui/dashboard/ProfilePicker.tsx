@@ -1,31 +1,40 @@
-"use client"
+"use client";
 import React from "react";
+import { redirect } from "next/navigation";
+import axios from "axios";
 // icons
 import { IoIosCamera } from "react-icons/io";
 export default function ProfilePicker() {
+  // path
+  // profile submit handler
+  const profileSubmitHandler = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files?.[0]) {
+      const formData = new FormData();
+      formData.append("file", event.target.files?.[0]);
+      formData.append("upload_preset", "menelik");
 
-    // profile submit handler
-    const profileSubmitHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        if(event.target.files?.[0]){
-            const formData = new FormData()
-            formData.append("file", event.target.files?.[0]);
-            formData.append("upload_preset", "menelik");
-
-            const data = await fetch(
-              "https://api.cloudinary.com/v1_1/diyn4opd7/image/upload",
-              {
-                method: "POST",
-                body: formData,
-              }
-            ).then((r) => r.json());
-            if(data?.url){
-                console.log(data.url)
-            }
-
-            event.target.value = ""
+      const data = await fetch(
+        "https://api.cloudinary.com/v1_1/diyn4opd7/image/upload",
+        {
+          method: "POST",
+          body: formData,
         }
-        
+      ).then((r) => r.json());
+      if (data?.url) {
+        const response = await axios.post("http://localhost:3000/api/profile", {
+          url: data?.url,
+        });
+        if (response?.data?.message === "successful profile upload") {
+          console.log("redirect over here");
+          // redirect("/")
+        }
+      }
+
+      event.target.value = "";
     }
+  };
   return (
     <div>
       <input
@@ -33,7 +42,7 @@ export default function ProfilePicker() {
         name="profile"
         id="profile-picker"
         accept="image/*"
-        hidden 
+        hidden
         onChange={profileSubmitHandler}
       />
       <label
