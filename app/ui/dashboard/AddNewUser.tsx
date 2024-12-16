@@ -1,11 +1,14 @@
 "use client"
 import React,{useState} from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 // icons
 import { IoIosAdd } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 
 export default function AddNewUser() {
+    // hooks
+    const router = useRouter()
     // states
     // username
     const [username,setUsername] = useState("")
@@ -26,16 +29,15 @@ export default function AddNewUser() {
             const formData = new FormData()
             formData.append("username",username)
             const response = await axios.post("http://localhost:3000/api/users",formData)
-            console.log(response.data)
             if(response.data?.success){
                 setUsername("")
-                // refresh the page to include the new user
+                router.refresh()
             }
         }
     }
 
   return (
-    <div>
+    <div className="mb-3">
       {/* inputs */}
       <div className="flex items-center gap-x-1.5">
         {/* username */}

@@ -9,7 +9,7 @@ import userModel from "@/lib/models/user.model";
 export async function GET(){
     try{
         await dbConnection()
-        const users = await userModel.find().sort({createdAt: 1}).select({_id: 1,username: 1,createdAt: 1})
+        const users = await userModel.find().sort({createdAt: -1}).select({_id: 1,username: 1,createdAt: 1})
         return NextResponse.json({success: true,users},{status: 200})
     }catch(err){
         console.log(err)
