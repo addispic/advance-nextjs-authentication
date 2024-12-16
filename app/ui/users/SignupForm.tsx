@@ -32,6 +32,8 @@ export default function SignupForm() {
 
   //   errors
   const [errors, setErrors] = useState<FormFieldErrorsInterface>({});
+  // is loading
+  const [isLoading, setIsLoading] = useState(false);
 
   //   form submit handler
   const signupFormSubmitHandler = async () => {
@@ -44,7 +46,9 @@ export default function SignupForm() {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
       setErrors({});
+      setIsLoading(true);
       const response = await signup({ username, email, password });
+      setIsLoading(false);
       if (response.usernameError) {
         setErrors((prev) => {
           return {
@@ -222,10 +226,15 @@ export default function SignupForm() {
         </div>
         {/* button */}
         <button
+          disabled={isLoading}
           onClick={signupFormSubmitHandler}
           className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-green-600 bg-green-500 text-white flex items-center justify-center"
         >
-          <span>Signup</span>
+          {isLoading ? (
+            <div className="h-[24px] aspect-square rounded-full border-2 border-white border-r-transparent animate-spin" />
+          ) : (
+            <span>Signup</span>
+          )}
         </button>
         {/* have an account */}
         <div className="mt-5 text-sm text-neutral-500">

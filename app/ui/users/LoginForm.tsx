@@ -7,6 +7,8 @@ import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
 // lib
 import { LoginFormSchema } from "@/lib/definitions";
+// actions
+import { login } from "@/lib/actions/auth";
 
 // form filed errors interface
 interface FormFieldErrorsInterface {
@@ -27,6 +29,8 @@ export default function LoginForm() {
 
   //   errors
   const [errors, setErrors] = useState<FormFieldErrorsInterface>({});
+  // is loading
+  const [isLoading,setIsLoading] = useState(false)
 
   //   form submit handler
   const signupFormSubmitHandler = async () => {
@@ -38,7 +42,29 @@ export default function LoginForm() {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
       setErrors({});
-      console.log({ username, password });
+      setIsLoading(true)
+      const response = await login({ username, password });
+      setIsLoading(false)
+      if (response.usernameError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            username: [response.usernameError],
+          };
+        });
+      } else if (response.passwordError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            password: [response.passwordError],
+          };
+        });
+      } else {
+        setErrors({});
+        setUsername("");
+        setPassword("");
+        console.log("REDIRECT");
+      }
     }
   };
 
@@ -152,14 +178,23 @@ export default function LoginForm() {
         </div>
         {/* forget password */}
         <div className="flex items-center justify-end text-sm text-neutral-500 transition-colors ease-in-out duration-150 hover:text-green-600 mb-3 hover:underline">
-            <Link href={"#"}><span>Forget password</span></Link>
+          <Link href={"#"}>
+            <span>Forget password</span>
+          </Link>
         </div>
         {/* button */}
         <button
+        disabled={isLoading}
           onClick={signupFormSubmitHandler}
           className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-green-600 bg-green-500 text-white flex items-center justify-center"
         >
+          {
+            isLoading 
+            ?
+            <div className="h-[24px] aspect-square rounded-full border-2 border-white border-r-transparent animate-spin" />
+            :
           <span>Login</span>
+          }
         </button>
         {/* have an account */}
         <div className="mt-5 text-sm text-neutral-500">
