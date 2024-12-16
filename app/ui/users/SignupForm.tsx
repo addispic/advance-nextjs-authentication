@@ -7,6 +7,8 @@ import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
 // lib
 import { SignupFormSchema } from "@/lib/definitions";
+// actions
+import { signup } from "@/lib/actions/auth";
 
 // form filed errors interface
 interface FormFieldErrorsInterface {
@@ -42,7 +44,28 @@ export default function SignupForm() {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
       setErrors({});
-      console.log({ username, email, password });
+      const response = await signup({ username, email, password });
+      if (response.usernameError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            username: [response.usernameError],
+          };
+        });
+      } else if (response.emailError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            email: [response.emailError],
+          };
+        });
+      } else if (response.success) {
+        setErrors({});
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        console.log("REDIRECT");
+      }
     }
   };
 
@@ -79,12 +102,12 @@ export default function SignupForm() {
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
-                setErrors(prev=>{
-                    return {
-                        ...prev,
-                        username: undefined
-                    }
-                })
+                setErrors((prev) => {
+                  return {
+                    ...prev,
+                    username: undefined,
+                  };
+                });
               }}
               onFocus={() => {
                 setFocus("username");
@@ -95,7 +118,7 @@ export default function SignupForm() {
             />
           </div>
           {/* username errors */}
-          {errors.username?.length  && (
+          {errors.username?.length && (
             <div className="px-1.5 text-sm text-red-500">
               {errors.username?.map((error) => {
                 return <p key={error}>{error}</p>;
@@ -122,12 +145,12 @@ export default function SignupForm() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setErrors(prev=>{
-                    return {
-                        ...prev,
-                        email: undefined
-                    }
-                })
+                setErrors((prev) => {
+                  return {
+                    ...prev,
+                    email: undefined,
+                  };
+                });
               }}
               onFocus={() => {
                 setFocus("email");
@@ -165,12 +188,12 @@ export default function SignupForm() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setErrors(prev=>{
-                    return {
-                        ...prev,
-                        password: undefined
-                    }
-                })
+                setErrors((prev) => {
+                  return {
+                    ...prev,
+                    password: undefined,
+                  };
+                });
               }}
               onFocus={() => {
                 setFocus("password");
