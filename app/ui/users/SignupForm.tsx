@@ -51,9 +51,9 @@ export default function SignupForm() {
       {/* header */}
       <header className="flex items-center justify-between mb-5">
         {/* left */}
-        <h3 className="text-cyan-600">Create account</h3>
+        <h3 className="text-green-600">Create account</h3>
         {/* switcher */}
-        <div className="flex items-center gap-x-0.5 text-xs cursor-pointer text-neutral-500 transition-colors ease-in-out duration-150 hover:text-cyan-500">
+        <div className="flex items-center gap-x-0.5 text-xs cursor-pointer text-neutral-500 transition-colors ease-in-out duration-150 hover:text-green-500">
           <span>English(US)</span>
           <MdArrowDropDown className="text-xl" />
         </div>
@@ -68,7 +68,7 @@ export default function SignupForm() {
               errors.username?.length
                 ? "border-red-500"
                 : focus === "username" || username
-                ? "border-cyan-500"
+                ? "border-green-500"
                 : "border-neutral-200"
             }`}
           >
@@ -111,7 +111,7 @@ export default function SignupForm() {
               errors.email?.length
                 ? "border-red-500"
                 : focus === "email" || email
-                ? "border-cyan-500"
+                ? "border-green-500"
                 : "border-neutral-200"
             }`}
           >
@@ -154,7 +154,7 @@ export default function SignupForm() {
               errors.password?.length
                 ? "border-red-500"
                 : focus === "password" || password
-                ? "border-cyan-500"
+                ? "border-green-500"
                 : "border-neutral-200"
             }`}
           >
@@ -183,7 +183,7 @@ export default function SignupForm() {
               onClick={() => {
                 setIsPasswordHide(!isPasswordHide);
               }}
-              className="text-neutral-400 transition-colors ease-in-out duration-150 hover:text-cyan-500 text-xl"
+              className="text-neutral-400 transition-colors ease-in-out duration-150 hover:text-green-500 text-xl"
             >
               {isPasswordHide ? <VscEyeClosed /> : <VscEye />}
             </button>
@@ -200,7 +200,7 @@ export default function SignupForm() {
         {/* button */}
         <button
           onClick={signupFormSubmitHandler}
-          className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-cyan-600 bg-cyan-500 text-white flex items-center justify-center"
+          className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-green-600 bg-green-500 text-white flex items-center justify-center"
         >
           <span>Signup</span>
         </button>
@@ -209,7 +209,7 @@ export default function SignupForm() {
           <p>
             Already have an account ?{" "}
             <Link
-              className="font-medium transition-colors ease-in-out duration-150 hover:text-cyan-500 hover:underline"
+              className="font-medium transition-colors ease-in-out duration-150 hover:text-green-500 hover:underline"
               href={"/users/login"}
             >
               Login
