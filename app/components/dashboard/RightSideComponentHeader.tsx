@@ -24,7 +24,12 @@ export default function RightSideComponentHeader(){
             formData.append("username",username)
             const response = await axios.post("http://localhost:3000/api/users",formData)
             console.log(response.data)
-            setUsername("")
+            if(response.data?.newUser){
+                console.log(response.data)
+                setUsername("")
+            }else{
+                console.log("Some thing Wrong")
+            }
         }
     }
     return (
