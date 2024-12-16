@@ -11,7 +11,7 @@ import UsersModel from "@/app/models/users.model";
 export async function GET() {
   try{
     await dbConnection()
-    const allUsers = await UsersModel.find().sort({createdAt: -1})
+    const allUsers = await UsersModel.find().sort({createdAt: -1}).select({_id: 1, username: 1, createdAt: 1})
     return NextResponse.json({allUsers},{status: 200})
   }catch(err){
     return NextResponse.json({error: 'fail'},{status: 400})

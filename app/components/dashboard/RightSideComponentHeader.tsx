@@ -5,6 +5,10 @@ import axios from "axios";
 import { IoIosAdd } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 
+// contexts
+// users
+import { useUserContext } from "@/app/contexts/UserContext";
+
 export default function RightSideComponentHeader(){
     // states
     // user name
@@ -14,22 +18,17 @@ export default function RightSideComponentHeader(){
     // is Error
     const [isError,setIsError] = useState(false)
 
+    // contexts
+    const {addNewUser} = useUserContext()
+
     // form submit handler
     const formSubmitHandler = async () => {
         if(!username.trim()){
             setIsError(true)
         }else{
             setIsError(false)
-            const formData = new FormData() 
-            formData.append("username",username)
-            const response = await axios.post("http://localhost:3000/api/users",formData)
-            console.log(response.data)
-            if(response.data?.newUser){
-                console.log(response.data)
-                setUsername("")
-            }else{
-                console.log("Some thing Wrong")
-            }
+            addNewUser(username)
+            setUsername("")
         }
     }
     return (

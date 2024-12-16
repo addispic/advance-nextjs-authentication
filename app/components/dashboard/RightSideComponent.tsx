@@ -1,4 +1,5 @@
-import axios from "axios";
+"use client"
+import React,{useEffect} from 'react';
 import {formatDistanceToNow} from 'date-fns'
 
 // icons
@@ -9,9 +10,17 @@ import { AiOutlineDelete } from "react-icons/ai";
 // dashboard
 import RightSideComponentHeader from "./RightSideComponentHeader";
 
-export default async function RightSideComponent() {
-  const response = await axios.get("http://localhost:3000/api/users")
-  console.log(response.data?.allUsers)
+// contexts
+// user context 
+import { useUserContext } from "@/app/contexts/UserContext";
+
+export default function RightSideComponent() {
+  const {users,getAllUsers,refresher} = useUserContext()
+  // effects
+  // get all users
+  useEffect(()=>{
+    getAllUsers()
+  },[refresher])
   return (
     <div className="w-64 h-full p-1.5">
       <div className="w-full h-full bg-neutral-100 rounded-md overflow-hidden">
@@ -20,10 +29,10 @@ export default async function RightSideComponent() {
         {/* lists */}
         <div className="p-1.5">
           {
-            response.data?.allUsers?.length > 0 
+            users?.length > 0 
             ?
             <>
-            {response.data?.allUsers.map((userItem: {_id: string;username: string; createdAt: string}) => {
+            {users.map((userItem: {_id: string;username: string;createdAt: string}) => {
             return (
               <div
                 key={userItem._id}
