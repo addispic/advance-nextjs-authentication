@@ -5,6 +5,16 @@ import Link from "next/link";
 import { MdArrowDropDown } from "react-icons/md";
 import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
+// lib
+import { SignupFormSchema } from "@/lib/definitions";
+
+// form filed errors interface
+interface FormFieldErrorsInterface {
+  username?: string[];
+  email?: string[];
+  password?: string[];
+}
+
 export default function SignupForm() {
   // states
   // username
@@ -17,6 +27,24 @@ export default function SignupForm() {
   const [isPasswordHide, setIsPasswordHide] = useState(true);
   // focus
   const [focus, setFocus] = useState("");
+
+  //   errors
+  const [errors, setErrors] = useState<FormFieldErrorsInterface>({});
+
+  //   form submit handler
+  const signupFormSubmitHandler = async () => {
+    const validatedFields = SignupFormSchema.safeParse({
+      username,
+      email,
+      password,
+    });
+    if (!validatedFields.success) {
+      setErrors(validatedFields.error.flatten().fieldErrors);
+    } else {
+      setErrors({});
+      console.log({ username, email, password });
+    }
+  };
 
   return (
     <div className="min-w-96 bg-white shadow-lg rounded-md overflow-hidden p-5">
@@ -37,7 +65,7 @@ export default function SignupForm() {
           {/* username inputs */}
           <div
             className={`w-full px-1.5 py-1.5 border rounded-md flex items-center gap-x-1.5 transition-colors ease-in-out duration-150 ${
-              false
+              errors.username?.length
                 ? "border-red-500"
                 : focus === "username" || username
                 ? "border-cyan-500"
@@ -51,6 +79,12 @@ export default function SignupForm() {
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
+                setErrors(prev=>{
+                    return {
+                        ...prev,
+                        username: undefined
+                    }
+                })
               }}
               onFocus={() => {
                 setFocus("username");
@@ -61,9 +95,11 @@ export default function SignupForm() {
             />
           </div>
           {/* username errors */}
-          {false && (
+          {errors.username?.length  && (
             <div className="px-1.5 text-sm text-red-500">
-              <p>Username required</p>
+              {errors.username?.map((error) => {
+                return <p key={error}>{error}</p>;
+              })}
             </div>
           )}
         </div>
@@ -72,7 +108,7 @@ export default function SignupForm() {
           {/* email inputs */}
           <div
             className={`w-full px-1.5 py-1.5 border rounded-md flex items-center gap-x-1.5 transition-colors ease-in-out duration-150 ${
-              false
+              errors.email?.length
                 ? "border-red-500"
                 : focus === "email" || email
                 ? "border-cyan-500"
@@ -86,6 +122,12 @@ export default function SignupForm() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
+                setErrors(prev=>{
+                    return {
+                        ...prev,
+                        email: undefined
+                    }
+                })
               }}
               onFocus={() => {
                 setFocus("email");
@@ -96,9 +138,11 @@ export default function SignupForm() {
             />
           </div>
           {/* email errors */}
-          {false && (
+          {errors.email?.length && (
             <div className="px-1.5 text-sm text-red-500">
-              <p>Email required</p>
+              {errors.email?.map((error) => {
+                return <p key={error}>{error}</p>;
+              })}
             </div>
           )}
         </div>
@@ -107,7 +151,7 @@ export default function SignupForm() {
           {/* password inputs */}
           <div
             className={`w-full px-1.5 py-1.5 border rounded-md flex items-center gap-x-1.5 transition-colors ease-in-out duration-150 ${
-              false
+              errors.password?.length
                 ? "border-red-500"
                 : focus === "password" || password
                 ? "border-cyan-500"
@@ -121,6 +165,12 @@ export default function SignupForm() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
+                setErrors(prev=>{
+                    return {
+                        ...prev,
+                        password: undefined
+                    }
+                })
               }}
               onFocus={() => {
                 setFocus("password");
@@ -129,34 +179,42 @@ export default function SignupForm() {
                 setFocus("");
               }}
             />
-            <button onClick={()=>{
-                setIsPasswordHide(!isPasswordHide)
-            }} className="text-neutral-400 transition-colors ease-in-out duration-150 hover:text-cyan-500 text-xl">
-                {
-                    isPasswordHide 
-                    ?
-                    <VscEyeClosed />
-                    :
-                    <VscEye />
-                }
+            <button
+              onClick={() => {
+                setIsPasswordHide(!isPasswordHide);
+              }}
+              className="text-neutral-400 transition-colors ease-in-out duration-150 hover:text-cyan-500 text-xl"
+            >
+              {isPasswordHide ? <VscEyeClosed /> : <VscEye />}
             </button>
           </div>
           {/* password errors */}
-          {false && (
+          {errors.password?.length && (
             <div className="px-1.5 text-sm text-red-500">
-              <p>Password required</p>
+              {errors.password?.map((error) => {
+                return <p key={error}>{error}</p>;
+              })}
             </div>
           )}
         </div>
         {/* button */}
-        <button className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-cyan-600 bg-cyan-500 text-white flex items-center justify-center">
-            <span>Signup</span>
+        <button
+          onClick={signupFormSubmitHandler}
+          className="w-32 h-[33px] rounded-md overflow-hidden transition-colors ease-in-out duration-150 hover:bg-cyan-600 bg-cyan-500 text-white flex items-center justify-center"
+        >
+          <span>Signup</span>
         </button>
         {/* have an account */}
         <div className="mt-5 text-sm text-neutral-500">
-            <p>
-                Already have an account ? <Link className="font-medium transition-colors ease-in-out duration-150 hover:text-cyan-500 hover:underline" href={"/users/login"}>Login</Link>
-            </p>
+          <p>
+            Already have an account ?{" "}
+            <Link
+              className="font-medium transition-colors ease-in-out duration-150 hover:text-cyan-500 hover:underline"
+              href={"/users/login"}
+            >
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </div>
