@@ -15,7 +15,7 @@ import RightSideComponentHeader from "./RightSideComponentHeader";
 import { useUserContext } from "@/app/contexts/UserContext";
 
 export default function RightSideComponent() {
-  const {users,getAllUsers,refresher} = useUserContext()
+  const {users,getAllUsers,refresher,deleteUser} = useUserContext()
   // effects
   // get all users
   useEffect(()=>{
@@ -54,7 +54,9 @@ export default function RightSideComponent() {
                 </div>
                 {/* action */}
                 <div>
-                  <AiOutlineDelete className="text-lg text-neutral-400 transition-colors ease-in-out duration-150 hover:text-neutral-600 cursor-pointer" />
+                  <AiOutlineDelete onClick={()=>{
+                    deleteUser(userItem._id)
+                  }} className="text-lg text-neutral-400 transition-colors ease-in-out duration-150 hover:text-neutral-600 cursor-pointer" />
                 </div>
               </div>
             );

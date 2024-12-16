@@ -16,6 +16,7 @@ interface UserContextType {
   refresher: boolean;
   getAllUsers: () => Promise<void>;
   addNewUser: (username: string) => Promise<void>;
+  deleteUser: (_id: string) => Promise<void>;
 }
 
 // context
@@ -26,28 +27,39 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [users, setUsers] = useState<UserInterface[]>([]);
-  const [refresher,setRefresher] = useState(false)
+  const [refresher, setRefresher] = useState(false);
 
-//   actions
-// get all users
-const getAllUsers = async () => {
-    const response = await axios.get("http://localhost:3000/api/users")
-    setRefresher(true)
-    if(response.data?.allUsers){
-        setUsers(response.data?.allUsers)
-        setRefresher(false)
+  //   actions
+  // get all users
+  const getAllUsers = async () => {
+    const response = await axios.get("http://localhost:3000/api/users");
+    setRefresher(true);
+    if (response.data?.allUsers) {
+      setUsers(response.data?.allUsers);
+      setRefresher(false);
     }
-} 
+  };
 
-// add new user 
-const addNewUser = async (username: string) => {
-    const formData = new FormData()
-    formData.append("username",username)
-    await axios.post("http://localhost:3000/api/users",formData) 
+  // add new user
+  const addNewUser = async (username: string) => {
+    const formData = new FormData();
+    formData.append("username", username);
+    await axios.post("http://localhost:3000/api/users", formData);
+    setRefresher(true);
+  };
+
+  // delete user
+  const deleteUser = async (_id: string) => {
     setRefresher(true)
-}
+    await axios.delete(`http://localhost:3000/api/users/${_id}`)
+    setRefresher(false)
+  };
   return (
-    <UserContext.Provider value={{ users,getAllUsers, refresher, addNewUser }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{ users, getAllUsers, refresher, addNewUser, deleteUser }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 
