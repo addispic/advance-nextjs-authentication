@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 // icons
 import { MdArrowDropDown } from "react-icons/md";
 import { VscEye } from "react-icons/vsc";
@@ -17,6 +18,8 @@ interface FormFieldErrorsInterface {
 }
 
 export default function LoginForm() {
+  // hooks
+  const router = useRouter()
   // states
   // username
   const [username, setUsername] = useState("");
@@ -63,7 +66,7 @@ export default function LoginForm() {
         setErrors({});
         setUsername("");
         setPassword("");
-        console.log("REDIRECT");
+        router.push("/")
       }
     }
   };

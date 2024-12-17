@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
+import { cookies } from "next/headers";
 
 // secrete key
 const SECRET_KEY = process.env.SECRET_KEY || "";
@@ -11,7 +12,7 @@ export async function encrypt(payload: JWTPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("60s from now")
+    .setExpirationTime("1h from now")
     .sign(ENCODED_KEY);
 }
 
@@ -41,7 +42,14 @@ export async function updateSession(request: NextRequest) {
     secure: true,
     sameSite: "lax",
     path: "/",
-    expires: new Date(Date.now() + 60 * 1000),
+    expires: new Date(Date.now() + 60 * 60 * 1000),
   });
   return response;
+}
+
+// get payload
+export async function getPayload(){
+  const session = (await cookies()).get("blog-i-auth-session")?.value 
+  if(!session) return 
+  return (await decrypt(session))?._id
 }

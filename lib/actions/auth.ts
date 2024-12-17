@@ -34,7 +34,7 @@ export async function login({
         sameSite: "lax",
         secure: true,
         path: "/",
-        expires: new Date(Date.now() + 60 * 1000),
+        expires: new Date(Date.now() + 60 * 60 * 1000),
       }
     );
     return { success: true };
@@ -75,7 +75,7 @@ export async function signup({
         sameSite: "lax",
         secure: true,
         path: "/",
-        expires: new Date(Date.now() + 60 * 1000),
+        expires: new Date(Date.now() + 60 * 60 * 1000),
       }
     );
     return { success: true };
