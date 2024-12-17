@@ -83,3 +83,10 @@ export async function signup({
     return { signupError: "signup error" };
   }
 }
+
+// logout
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("blog-i-auth-session");
+  return { success: true };
+}
