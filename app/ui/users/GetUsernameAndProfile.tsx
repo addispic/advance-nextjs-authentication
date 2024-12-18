@@ -12,7 +12,12 @@ export default function GetUsernameAndProfile({
 }) {
   return (
     <Link
-      href={"/users/profiles"}
+      href={{
+        pathname: "/users/profiles",
+        query: {
+          _id,
+        },
+      }}
       className="flex items-center gap-x-1.5 text-sm text-green-600 transition-colors ease-in-out duration-150 hover:text-green-500"
     >
       {flip ? (

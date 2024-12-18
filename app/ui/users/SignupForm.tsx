@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 // icons
 import { MdArrowDropDown } from "react-icons/md";
 import { VscEye } from "react-icons/vsc";
@@ -35,6 +36,9 @@ export default function SignupForm() {
   // is loading
   const [isLoading, setIsLoading] = useState(false);
 
+  // hooks
+  const router = useRouter()
+
   //   form submit handler
   const signupFormSubmitHandler = async () => {
     const validatedFields = SignupFormSchema.safeParse({
@@ -68,7 +72,7 @@ export default function SignupForm() {
         setUsername("");
         setEmail("");
         setPassword("");
-        console.log("REDIRECT");
+        router.push(`/users/profiles?_id=${response._id}`)
       }
     }
   };
