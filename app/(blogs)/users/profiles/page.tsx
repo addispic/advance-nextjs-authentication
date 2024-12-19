@@ -4,5 +4,5 @@ export default function Profiles({
   searchParams: { _id: string };
 }) {
   const { _id } = searchParams;
-  return <div>Profile</div>;
+  return <div>Haddis Menelik From Bahir Dar</div>;
 }
