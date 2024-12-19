@@ -1,15 +1,21 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // icons
 import { IoIosCamera } from "react-icons/io";
 import { MdOutlineMailOutline } from "react-icons/md";
+import { MdOutlineSettingsSuggest } from "react-icons/md";
 
-export default function ProfilesLayout({
+// ui
+import UserProfileLinks from "@/app/ui/profiles/UserProfileLinks";
+
+export default async function ProfilesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+    
   return (
     <div>
       {/* header stuff here */}
@@ -71,20 +77,46 @@ export default function ProfilesLayout({
             </div>
             {/* user detail */}
             <div className="py-1.5">
-                {/* username */}
-                <div className="text-sm text-green-600"><span>Haddis Menelik</span></div>
-                {/* email */}
-                <a href="mailto:addispick@gmail.com" className="flex items-center gap-x-1.5 text-sm text-green-600">
-                    <MdOutlineMailOutline />
-                    <span>addispik@gmail.com</span>
-                </a>
+              {/* username */}
+              <div className="text-sm text-green-600">
+                <span>Haddis Menelik</span>
+              </div>
+              {/* email */}
+              <a
+                href="mailto:addispick@gmail.com"
+                className="flex items-center gap-x-1.5 text-sm text-green-600"
+              >
+                <MdOutlineMailOutline />
+                <span>addispik@gmail.com</span>
+              </a>
             </div>
           </div>
           {/* right */}
-          <div>right</div>
+          <div>
+            <div className="text-xl text-neutral-500 p-1.5 transition-colors ease-in-out duration-150 hover:text-green-500 cursor-pointer">
+              <Link
+                href={{
+                  pathname: "/users/profiles/settings",
+                  query: { _id: "user id here" },
+                }}
+              >
+                <MdOutlineSettingsSuggest />
+              </Link>
+            </div>
+          </div>
+        </div>
+        {/* links */}
+        <div>
+          {/* top */}
+          <UserProfileLinks />
+          {/* bottom */}
+          <div className="w-full flex items-center gap-x-1.5 px-[5%]">
+            <div className="flex-1 h-[1px] bg-neutral-300 rounded-full" />
+            <div className="w-[7px] aspect-square rounded-full shrink-0 bg-neutral-300" />
+            <div className="flex-1 h-[1px] bg-neutral-300 rounded-full" />
+          </div>
         </div>
       </header>
-      {/* pages */}
       <div>{children}</div>
     </div>
   );
