@@ -8,6 +8,9 @@ import { VscEyeClosed } from "react-icons/vsc";
 
 // definition
 import { SignupFormSchema } from "@/lib/definitions";
+// actions
+import { signup } from "@/lib/actions";
+
 // interface
 interface Errors {
   email?: string[];
@@ -25,14 +28,30 @@ export default function SignupForm() {
   const [focus, setFocus] = useState("");
   //   errors
   const [errors, setErrors] = useState<Errors>({});
+  //   is pending
+  const [isPending, setIsPending] = useState(false);
 
   //   form submit handler
-  const formSubmitHandler = () => {
+  const formSubmitHandler = async () => {
     const validatedFields = SignupFormSchema.safeParse({ email, password });
     if (!validatedFields.success) {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
       setErrors({});
+      setIsPending(true);
+      const response = await signup({ email, password });
+      setIsPending(false);
+      if (response.emailError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            email: [response.emailError],
+          };
+        });
+      } else if (response.success) {
+        setErrors({});
+        console.log(response);
+      }
     }
   };
 
@@ -144,10 +163,15 @@ export default function SignupForm() {
         </div>
         {/* button */}
         <button
+          disabled={isPending}
           onClick={formSubmitHandler}
-          className="px-5 py-1 rounded-md text-sm flex items-center justify-center bg-cyan-500 text-white transition-colors ease-in-out duration-150 hover:bg-cyan-600"
+          className="px-5 py-1 rounded-md text-sm flex items-center justify-center bg-cyan-500 text-white transition-colors ease-in-out duration-150 hover:bg-cyan-600 w-[7rem] h-[2.05rem]"
         >
-          <span>Signup</span>
+          {isPending ? (
+            <div className="w-[1.5rem] aspect-square rounded-full border-4 border-neutral-200 border-r-cyan-300 animate-spin" />
+          ) : (
+            <span>Signup</span>
+          )}
         </button>
         {/* link */}
         <div className="text-sm text-neutral-400 mt-5">
