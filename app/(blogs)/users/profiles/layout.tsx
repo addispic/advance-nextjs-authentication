@@ -1,14 +1,7 @@
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-
-// icons
-import { IoIosCamera } from "react-icons/io";
-import { MdOutlineMailOutline } from "react-icons/md";
-import { MdOutlineSettingsSuggest } from "react-icons/md";
 
 // ui
-import UserProfileLinks from "@/app/ui/profiles/UserProfileLinks";
+import ProfilesHeader from "@/app/ui/profiles/ProfilesHeader";
 
 export default async function ProfilesLayout({
   children,
@@ -19,104 +12,7 @@ export default async function ProfilesLayout({
   return (
     <div>
       {/* header stuff here */}
-      <header>
-        {/* background image */}
-        <div className="w-full h-[120px] sm:h-[130px] md:h-[140px] lg:h-[150px] xl:h-[160px] relative overflow-hidden rounded-b-sm md:rounded-b-md lg:rounded-b-lg xl:rounded-b-xl">
-          {/* pick background image */}
-
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              id="user-profile-background-image-picker"
-              hidden
-            />
-            <label htmlFor="user-profile-background-image-picker">
-              <div className="absolute right-3 top-3 z-30 bg-neutral-300 cursor-pointer transition-colors ease-in-out duration-150 hover:bg-neutral-100 w-[24px] aspect-square rounded-full overflow-hidden flex items-center justify-center">
-                <IoIosCamera />
-              </div>
-            </label>
-          </div>
-          <Image
-            src={
-              "https://images.pexels.com/photos/1042423/pexels-photo-1042423.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            }
-            fill
-            alt="user background image"
-            style={{ objectFit: "cover" }}
-          />
-        </div>
-        {/* user profiles */}
-        <div className="flex justify-between">
-          {/* left */}
-          <div className="pl-[1.5rem] flex gap-x-3">
-            {/* user profile */}
-            <div className="w-[7rem] aspect-square rounded-full overflow-hidden relative border-2 border-white shadow-md z-40 mt-[-3.5rem]">
-              {/* user profile image picker */}
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="user-profile-background-image-picker"
-                  hidden
-                />
-                <label htmlFor="user-profile-background-image-picker">
-                  <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 z-50 bg-neutral-300 cursor-pointer transition-colors ease-in-out duration-150 hover:bg-neutral-100 w-[24px] aspect-square rounded-full overflow-hidden flex items-center justify-center">
-                    <IoIosCamera />
-                  </div>
-                </label>
-              </div>
-              <Image
-                src={
-                  "https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                }
-                fill
-                alt="user profile image"
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-            {/* user detail */}
-            <div className="py-1.5">
-              {/* username */}
-              <div className="text-sm text-green-600">
-                <span>Haddis Menelik</span>
-              </div>
-              {/* email */}
-              <a
-                href="mailto:addispick@gmail.com"
-                className="flex items-center gap-x-1.5 text-sm text-green-600"
-              >
-                <MdOutlineMailOutline />
-                <span>addispik@gmail.com</span>
-              </a>
-            </div>
-          </div>
-          {/* right */}
-          <div>
-            <div className="text-xl text-neutral-500 p-1.5 transition-colors ease-in-out duration-150 hover:text-green-500 cursor-pointer">
-              <Link
-                href={{
-                  pathname: "/users/profiles/settings",
-                  query: { _id: "user id here" },
-                }}
-              >
-                <MdOutlineSettingsSuggest />
-              </Link>
-            </div>
-          </div>
-        </div>
-        {/* links */}
-        <div>
-          {/* top */}
-          <UserProfileLinks />
-          {/* bottom */}
-          <div className="w-full flex items-center gap-x-1.5 px-[5%]">
-            <div className="flex-1 h-[1px] bg-neutral-300 rounded-full" />
-            <div className="w-[7px] aspect-square rounded-full shrink-0 bg-neutral-300" />
-            <div className="flex-1 h-[1px] bg-neutral-300 rounded-full" />
-          </div>
-        </div>
-      </header>
+      <ProfilesHeader />
       <div>{children}</div>
     </div>
   );
