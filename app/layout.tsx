@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 
-// providers
-import TanstackProvider from "@/providers/TanstackProvider";
+
 
 export const metadata: Metadata = {
   title: "Tanstack Query",
@@ -18,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TanstackProvider>{children}</TanstackProvider>
+        {children}
       </body>
     </html>
   );
