@@ -25,7 +25,6 @@ export default function Posts() {
     queryFn: () =>
       fetch("http://localhost:3000/api/posts").then((res) => res.json()),
   });
-  console.log(posts);
   return (
     <div>
       {/* single post */}
