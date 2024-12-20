@@ -8,6 +8,8 @@ import { VscEyeClosed } from "react-icons/vsc";
 
 // definition
 import { LoginFormSchema } from "@/lib/definitions";
+// actions
+import { login } from "@/lib/actions";
 // interface
 interface Errors {
   emailUsername?: string[];
@@ -25,9 +27,11 @@ export default function LoginForm() {
   const [focus, setFocus] = useState("");
   //   errors
   const [errors, setErrors] = useState<Errors>({});
+  // is pending
+  const [isPending, setIsPending] = useState(false);
 
   //   form submit handler
-  const formSubmitHandler = () => {
+  const formSubmitHandler = async () => {
     const validatedFields = LoginFormSchema.safeParse({
       emailUsername,
       password,
@@ -36,6 +40,20 @@ export default function LoginForm() {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
       setErrors({});
+      setIsPending(true);
+      const response = await login({ emailUsername, password });
+      setIsPending(false);
+      if (response.emailUsernameError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            emailUsername: [response.emailUsernameError],
+          };
+        });
+      } else if (response.success) {
+        console.log(response);
+        setErrors({});
+      }
     }
   };
 
@@ -147,10 +165,15 @@ export default function LoginForm() {
         </div>
         {/* button */}
         <button
+          disabled={isPending}
           onClick={formSubmitHandler}
-          className="px-5 py-1 rounded-md text-sm flex items-center justify-center bg-cyan-500 text-white transition-colors ease-in-out duration-150 hover:bg-cyan-600"
+          className="px-5 py-1 rounded-md text-sm flex items-center justify-center bg-cyan-500 text-white transition-colors ease-in-out duration-150 hover:bg-cyan-600 w-[7rem] h-[2.05rem]"
         >
-          <span>Login</span>
+          {isPending ? (
+            <div className="w-[1.5rem] aspect-square rounded-full border-4 border-neutral-200 border-r-cyan-300 animate-spin" />
+          ) : (
+            <span>Login</span>
+          )}
         </button>
         {/* link */}
         <div className="text-sm text-neutral-400 mt-5">

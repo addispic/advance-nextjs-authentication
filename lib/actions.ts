@@ -22,9 +22,33 @@ export async function signup({
       email,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
     });
-    return { success: true, _id: (newUser._id).toString() };
+    return { success: true, _id: newUser._id.toString() };
   } catch (err) {
     console.log(err);
     return { success: false, errorMessage: "Signup failed" };
+  }
+}
+
+// login
+export async function login({
+  emailUsername,
+  password,
+}: {
+  emailUsername: string;
+  password: string;
+}) {
+  try {
+    await dbConnection();
+    const isUserExist = await userModel.findOne({
+      $or: [{ username: emailUsername},{email: emailUsername }],
+    });
+    if (!isUserExist)
+      return { success: false, emailUsernameError: "Username/email not exist" };
+    if (!bcrypt.compareSync(password, isUserExist.password))
+      return { success: false, passwordError: "Incorrect password" };
+    return { success: true, _id: isUserExist._id.toString() };
+  } catch (err) {
+    console.log(err);
+    return { success: false, errorMessage: "user login failed" };
   }
 }
