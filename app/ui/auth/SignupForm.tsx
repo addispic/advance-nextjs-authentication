@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 // icons
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -31,6 +32,9 @@ export default function SignupForm() {
   //   is pending
   const [isPending, setIsPending] = useState(false);
 
+  // hooks
+  const router = useRouter();
+
   //   form submit handler
   const formSubmitHandler = async () => {
     const validatedFields = SignupFormSchema.safeParse({ email, password });
@@ -50,6 +54,7 @@ export default function SignupForm() {
         });
       } else if (response.success) {
         setErrors({});
+        router.push(`/profile?_id=${response._id}`);
         console.log(response);
       }
     }

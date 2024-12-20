@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 // icons
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -30,6 +31,9 @@ export default function LoginForm() {
   // is pending
   const [isPending, setIsPending] = useState(false);
 
+  // hooks
+  const router = useRouter();
+
   //   form submit handler
   const formSubmitHandler = async () => {
     const validatedFields = LoginFormSchema.safeParse({
@@ -50,8 +54,16 @@ export default function LoginForm() {
             emailUsername: [response.emailUsernameError],
           };
         });
+      } else if (response.passwordError) {
+        setErrors((prev) => {
+          return {
+            ...prev,
+            password: [response.passwordError],
+          };
+        });
       } else if (response.success) {
-        console.log(response);
+        // console.log(response);
+        router.push("/");
         setErrors({});
       }
     }
