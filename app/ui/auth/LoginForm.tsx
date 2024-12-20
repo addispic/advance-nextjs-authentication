@@ -7,16 +7,16 @@ import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
 
 // definition
-import { SignupFormSchema } from "@/lib/definitions";
+import { LoginFormSchema } from "@/lib/definitions";
 // interface
 interface Errors {
-  email?: string[];
+  emailUsername?: string[];
   password?: string[];
 }
-export default function SignupForm() {
+export default function LoginForm() {
   // states
   // email
-  const [email, setEmail] = useState("");
+  const [emailUsername, setEmailUsername] = useState("");
   // password
   const [password, setPassword] = useState("");
   // is password hide
@@ -28,7 +28,10 @@ export default function SignupForm() {
 
   //   form submit handler
   const formSubmitHandler = () => {
-    const validatedFields = SignupFormSchema.safeParse({ email, password });
+    const validatedFields = LoginFormSchema.safeParse({
+      emailUsername,
+      password,
+    });
     if (!validatedFields.success) {
       setErrors(validatedFields.error.flatten().fieldErrors);
     } else {
@@ -40,7 +43,7 @@ export default function SignupForm() {
     <div className="min-w-64 sm:min-w-72 md:min-w-80 xl:min-w-96 p-5 rounded-md overflow-hidden shadow-md">
       {/* header */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg text-sky-500">Create account</h3>
+        <h3 className="text-lg text-sky-500">Login</h3>
         <div className="cursor-pointer flex items-center gap-x-0.5 text-xs text-neutral-400 transition-colors ease-in-out duration-150 hover:text-sky-500">
           <span>English(US)</span>
           <IoMdArrowDropdown className="text-lg" />
@@ -48,13 +51,13 @@ export default function SignupForm() {
       </div>
       {/* inputs */}
       <div>
-        {/* email */}
+        {/* email or username */}
         <div className="mb-4">
           <div
             className={`flex items-center gap-x-1.5 border-b-[.1rem] p-0.5 transition-colors ease-in-out duration-150 ${
-              errors?.email?.length
+              errors?.emailUsername?.length
                 ? "border-red-500"
-                : focus === "email" || email
+                : focus === "email-username" || emailUsername
                 ? "border-cyan-500"
                 : "border-neutral-300"
             }`}
@@ -62,10 +65,10 @@ export default function SignupForm() {
             <input
               className="w-full focus:ring-0 focus:outline-none bg-transparent border-none text-sm"
               type="text"
-              placeholder="Email address"
-              value={email}
+              placeholder="Username/email address"
+              value={emailUsername}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setEmailUsername(e.target.value);
                 setErrors((prev) => {
                   return {
                     ...prev,
@@ -82,9 +85,9 @@ export default function SignupForm() {
             />
           </div>
           {/* email error */}
-          {errors?.email?.length && (
+          {errors?.emailUsername?.length && (
             <div className="text-sm text-red-500 px-0.5">
-              {errors?.email?.map((error) => {
+              {errors?.emailUsername?.map((error) => {
                 return <p key={error}>{error}</p>;
               })}
             </div>
@@ -147,17 +150,17 @@ export default function SignupForm() {
           onClick={formSubmitHandler}
           className="px-5 py-1 rounded-md text-sm flex items-center justify-center bg-cyan-500 text-white transition-colors ease-in-out duration-150 hover:bg-cyan-600"
         >
-          <span>Signup</span>
+          <span>Login</span>
         </button>
         {/* link */}
         <div className="text-sm text-neutral-400 mt-5">
           <p>
-            Already have an account ?{" "}
+            Don't have an account ?{" "}
             <Link
               className="font-medium transition-colors ease-in-out duration-150 hover:text-cyan-500 hover:underline"
-              href={"/login"}
+              href={"/signup"}
             >
-              Login
+              Signup
             </Link>
           </p>
         </div>
