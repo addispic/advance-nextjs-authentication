@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 // secret key
@@ -41,4 +42,11 @@ export async function updateSession(request: NextRequest) {
     }
   );
   return response;
+}
+
+// get payload
+export async function getLoggedInUserId() {
+  const session = (await cookies()).get("idea-share-auth-session")?.value;
+  if (!session) return;
+  return (await decrypt(session))?._id;
 }

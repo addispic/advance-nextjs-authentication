@@ -77,3 +77,9 @@ export async function login({
     return { success: false, errorMessage: "user login failed" };
   }
 }
+
+// logout
+export async function logout() {
+  (await cookies()).delete("idea-share-auth-session");
+  return { success: true, message: "user logged out" };
+}
