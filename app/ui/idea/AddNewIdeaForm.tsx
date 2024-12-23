@@ -1,14 +1,44 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 // icons
 import { GrSend } from "react-icons/gr";
 import { TiAttachmentOutline } from "react-icons/ti";
+
+// types
+type APIErrorResponse = {
+  error: string;
+};
+
 export default function AddNewIdeaForm() {
   // states
   // text
   const [text, setText] = useState("");
   //   focus
   const [focus, setFocus] = useState("");
+
+  // hooks
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  // mutations
+  // add new idea mutation
+  const newIdeaMutation = useMutation({
+    mutationFn: (formData: FormData) =>
+      axios.post("http://localhost:3000/api/ideas", formData),
+    onSuccess: () => {
+      setText("");
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+    },
+    onError: (err: AxiosError) => {
+      const errorData = err?.response?.data as APIErrorResponse;
+      if (errorData?.error === "unauthorized") {
+        router.push("/login");
+      }
+    },
+  });
   // reference
   // text area reference
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -24,8 +54,11 @@ export default function AddNewIdeaForm() {
 
   //   handles
   const submitFormHandler = () => {
-    console.log({ text });
-    setText("");
+    if (text?.trim()) {
+      const formData = new FormData();
+      formData.append("text", text);
+      newIdeaMutation.mutate(formData);
+    }
   };
 
   return (
