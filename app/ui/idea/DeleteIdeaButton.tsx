@@ -1,46 +1,40 @@
 "use client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 // icons
 import { RiDeleteBinLine } from "react-icons/ri";
 
-export default function DeleteIdeaButton({
-  author,
-  _id,
-}: {
-  author: string;
-  _id: string;
-}) {
-  // query client
-  const queryClient = useQueryClient();
-  // hooks
-  const deleteIdeaMutation = useMutation({
-    mutationFn: (_id: string) =>
-      axios.delete(`http://localhost:3000/api/ideas/${_id}`),
-    onSuccess: () => {
-      console.log("Deleted Successfully");
-      queryClient.invalidateQueries({ queryKey: ["ideas"] });
-    },
-    onError: (error: AxiosError) => {
-      console.log(error);
-    },
-  });
-  const { data: userId } = useQuery({
-    queryKey: ["user-id"],
-    queryFn: () =>
-      fetch("http://localhost:3000/api/user-id").then((res) => res.json()),
-  });
-  if (author !== userId) return null;
+export default function DeleteIdeaButton({ _id }: { _id: string }) {
+  // states
+  const [isPending, setIsPending] = useState(false);
+
+  //   hooks
+  const router = useRouter();
+
   //   delete idea handler
-  const deleteIdeaHandler = () => {
-    deleteIdeaMutation.mutate(_id);
+  const deleteIdeaHandler = async () => {
+    setIsPending(true);
+    const response = await axios.delete(
+      `http://localhost:3000/api/ideas/${_id}`
+    );
+    if (response?.data?.success) {
+      router.refresh();
+    }
+    setIsPending(false);
   };
+
   return (
     <button
       onClick={deleteIdeaHandler}
-      className="text-lg text-neutral-400 transition-colors ease-in-out duration-150 hover:text-red-500"
+      disabled={isPending}
+      className="text-lg text-neutral-400 transition-colors ease-in-out duration-150 hover:text-red-500 shrink-0"
     >
-      <RiDeleteBinLine />
+      {isPending ? (
+        <div className="w-[18px] aspect-square border-4 border-red-500 border-r-transparent animate-spin rounded-full" />
+      ) : (
+        <RiDeleteBinLine />
+      )}
     </button>
   );
 }

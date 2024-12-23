@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
     await ideaModel.create({ author, text: formData.get("text") });
-    return NextResponse.json({ message: "new idea added successfully" });
+    return NextResponse.json({ success: true });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ error: "add new idea error" }, { status: 400 });
+    return NextResponse.json({ error: "add new idea error" }, { status: 4001 });
   }
 }

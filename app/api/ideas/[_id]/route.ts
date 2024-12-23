@@ -26,7 +26,7 @@ export async function DELETE(
     }
     await ideaModel.findByIdAndDelete(_id);
     return NextResponse.json(
-      { message: "idea deleted successfully" },
+      { success: true },
       { status: 200 }
     );
   } catch (err) {

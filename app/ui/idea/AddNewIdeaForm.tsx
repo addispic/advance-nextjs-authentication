@@ -2,43 +2,22 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 // icons
 import { GrSend } from "react-icons/gr";
 import { TiAttachmentOutline } from "react-icons/ti";
-
-// types
-type APIErrorResponse = {
-  error: string;
-};
 
 export default function AddNewIdeaForm() {
   // states
   // text
   const [text, setText] = useState("");
+  // is pending
+  const [isPending, setIsPending] = useState(false);
   //   focus
   const [focus, setFocus] = useState("");
 
   // hooks
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  // mutations
-  // add new idea mutation
-  const newIdeaMutation = useMutation({
-    mutationFn: (formData: FormData) =>
-      axios.post("http://localhost:3000/api/ideas", formData),
-    onSuccess: () => {
-      setText("");
-      queryClient.invalidateQueries({ queryKey: ["ideas"] });
-    },
-    onError: (err: AxiosError) => {
-      const errorData = err?.response?.data as APIErrorResponse;
-      if (errorData?.error === "unauthorized") {
-        router.push("/login");
-      }
-    },
-  });
   // reference
   // text area reference
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -53,16 +32,27 @@ export default function AddNewIdeaForm() {
   }, [text]);
 
   //   handles
-  const submitFormHandler = () => {
+  const submitFormHandler = async () => {
     if (text?.trim()) {
       const formData = new FormData();
       formData.append("text", text);
-      newIdeaMutation.mutate(formData);
+      setIsPending(true);
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/ideas",
+          formData
+        );
+        router.refresh();
+      } catch (err) {
+        router.push("/login");
+      }
+      setIsPending(false);
+      setText("");
     }
   };
 
   return (
-    <div className="flex items-end gap-x-3 px-3 py-1 bg-white shadow-xl">
+    <div className="flex items-end gap-x-3 px-3 py-1.5 bg-white shadow-xl absolute bottom-1 left-0 w-full">
       {/* file picker */}
       <div className="text-3xl text-neutral-400 cursor-pointer">
         <TiAttachmentOutline />
@@ -93,12 +83,17 @@ export default function AddNewIdeaForm() {
       </div>
       {/* send button */}
       <button
+        disabled={isPending}
         onClick={submitFormHandler}
         className={`shrink-0 text-2xl ${
           text ? "text-green-500" : "text-neutral-500"
         }`}
       >
-        <GrSend />
+        {isPending ? (
+          <div className="w-[22px] shrink-0 aspect-square rounded-full border-4 border-green-500 border-r-transparent animate-spin" />
+        ) : (
+          <GrSend />
+        )}
       </button>
     </div>
   );

@@ -9,13 +9,15 @@ import { AiFillDislike } from "react-icons/ai";
 import { MdFavoriteBorder } from "react-icons/md";
 import { MdFavorite } from "react-icons/md";
 import { AiOutlineComment } from "react-icons/ai";
+// sessions
+import { getLoggedInUserId } from "@/lib/session";
 // interface
 import { Idea } from "./IdeasList";
 // ui
 import DeleteIdeaButton from "./DeleteIdeaButton";
 
-export default function SingleIdea({ idea }: { idea: Idea }) {
-  console.log("Server or Client");
+export default async function SingleIdea({ idea }: { idea: Idea }) {
+  const _id = await getLoggedInUserId();
   return (
     <div className="mb-5 pb-1.5 border-b border-neutral-200 text-sm">
       {/* idea */}
@@ -69,7 +71,7 @@ export default function SingleIdea({ idea }: { idea: Idea }) {
             <AiOutlineComment className="text-lg text-neutral-500" />
           </div>
           {/* delete */}
-          <DeleteIdeaButton author={idea.author} _id={idea._id}/>
+          {_id && _id === idea.author && <DeleteIdeaButton _id={idea._id} />}
         </div>
       </div>
     </div>
