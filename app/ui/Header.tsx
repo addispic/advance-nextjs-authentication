@@ -8,7 +8,6 @@ import LogoutButton from "./auth/LogoutButton";
 
 export default async function Header() {
   const _id = await getLoggedInUserId();
-  console.log(_id);
   return (
     <header className="flex items-center justify-between">
       {/* left */}

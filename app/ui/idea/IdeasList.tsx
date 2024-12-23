@@ -1,9 +1,11 @@
 "use client";
+import { useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 // ui
 import SingleIdea from "./SingleIdea";
+import { getLoggedInUserId } from "@/lib/session";
 
 // ideas
 export interface Idea {
@@ -23,6 +25,7 @@ export default function IdeasList() {
     },
   });
   if (isPending) return <h3 className="flex-1">Loading ....</h3>;
+
   return (
     <div className="flex-1 max-h-[89vh] overflow-y-auto pt-1.5">
       {ideas?.length ? (
