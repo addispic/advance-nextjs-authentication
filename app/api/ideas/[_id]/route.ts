@@ -14,7 +14,23 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { _id: string } }
 ) {
-  const { _id } = params;
-  console.log("note id", _id);
-  return NextResponse.json({ message: "idea delete APIs" });
+  const { _id } = await params;
+  try {
+    if (!(await getLoggedInUserId())) {
+      return NextResponse.json({ error: "unauthorized" });
+    }
+    await dbConnection();
+    const isIdeaExist = await ideaModel.findById(_id);
+    if (isIdeaExist.author.toString() !== (await getLoggedInUserId())) {
+      return NextResponse.json({ error: "unauthorized to delete idea" });
+    }
+    await ideaModel.findByIdAndDelete(_id);
+    return NextResponse.json(
+      { message: "idea deleted successfully" },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json({ error: "delete idea error" }, { status: 400 });
+  }
 }
