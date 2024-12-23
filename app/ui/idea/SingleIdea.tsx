@@ -50,6 +50,8 @@ export default async function SingleIdea({ idea }: { idea: Idea }) {
         </div>
         {/* actions */}
         <div className="flex items-center justify-between gap-x-3">
+          
+          
           {/* like */}
           <div className="flex items-center gap-x-0.5 cursor-pointer ">
             <span className=" text-xs">3</span>
@@ -71,7 +73,7 @@ export default async function SingleIdea({ idea }: { idea: Idea }) {
             <AiOutlineComment className="text-lg text-neutral-500" />
           </div>
           {/* delete */}
-          {_id && _id === idea.author && <DeleteIdeaButton _id={idea._id} />}
+          {_id === idea.author && <DeleteIdeaButton _id={idea._id}/>}
         </div>
       </div>
     </div>
